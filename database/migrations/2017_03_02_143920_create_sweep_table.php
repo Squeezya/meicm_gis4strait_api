@@ -15,13 +15,13 @@ class CreateSweepTable extends Migration
     {
         Schema::create('sweeps', function (Blueprint $table) {
             $table->string('id', 60)->primary();
-            $table->string('id_operation', 60)->index('fk_sweep_has_operation');;
+            $table->string('operation_id', 60)->index('fk_sweep_has_operation');;
             $table->text('path');
             $table->timestamps();
         });
 
         Schema::table('sweeps', function (Blueprint $table) {
-            $table->foreign('id_operation', 'fk_sweep_has_operation')->references('id')->on('operations');
+            $table->foreign('operation_id', 'fk_sweep_has_operation')->references('id')->on('operations');
         });
     }
 

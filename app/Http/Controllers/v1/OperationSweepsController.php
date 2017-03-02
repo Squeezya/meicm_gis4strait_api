@@ -7,6 +7,7 @@ use App\Models\v1\Sweep;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 
 use Illuminate\Support\Facades\Validator;
 use Webpatser\Uuid\Uuid;
@@ -14,6 +15,7 @@ use Webpatser\Uuid\Uuid;
 /**
  * @Controller(prefix="v1")
  * @Resource("v1/operations.sweeps", only={"index","store"})
+ * @Middleware("jwt.auth")
  */
 class OperationSweepsController extends Controller
 {
@@ -30,7 +32,7 @@ class OperationSweepsController extends Controller
     public function index(Request $request, $operationId)
     {
         $operation = Operation::findOrFail($operationId);
-        $sweeps = $operation->sweeps();
+        $sweeps = $operation->sweeps()->get();
         return Response::json($sweeps);
     }
 
@@ -50,11 +52,11 @@ class OperationSweepsController extends Controller
             return Response::json($v->errors(), 400);
         }
 
-        $sweep = new sweep();
+        $sweep = new Sweep();
         $sweep->fill($request->all());
 
         $operation = Operation::findOrFail($operationId);
-        $sweep->id_operation = $operation->id;
+        $sweep->operation_id = $operation->id;
 
         $sweep_id = Uuid::generate();
         $sweep->id = $sweep_id;

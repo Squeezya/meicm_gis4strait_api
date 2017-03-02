@@ -15,10 +15,11 @@ class Operation extends Model
 
     public $incrementing = false;
 
-    public $fillable = [];
+    public $fillable = ['name'];
 
 
     public static $rules = [
+        'name' => 'required'
     ];
 
     /**

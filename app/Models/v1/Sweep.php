@@ -7,7 +7,7 @@ use Illuminate\Auth\Authenticatable;
 
 class Sweep extends Model
 {
-    public $table = "sweep";
+    public $table = "sweeps";
 
     public $primaryKey = "id";
 
@@ -15,7 +15,7 @@ class Sweep extends Model
 
     public $incrementing = false;
 
-    public $fillable = [];
+    public $fillable = ['path'];
 
 
     public static $rules = [
