@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Models\v1\Operation;
+use DateTime;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -14,6 +15,7 @@ use Webpatser\Uuid\Uuid;
 /**
  * @Controller(prefix="v1")
  * @Resource("v1/operations", only={"index", "show", "store", "destroy", "update"})
+ * @Middleware("cors")
  * @Middleware("jwt.auth")
  */
 class OperationController extends Controller
@@ -30,8 +32,10 @@ class OperationController extends Controller
      */
     public function index(Request $request)
     {
-        $operations = Operation::all();
-        return Response::json($operations);
+        $perPage = $request->get('perPage');
+        $perPage = $perPage ?: 10;
+        $operations = Operation::with('sweeps')->orderBy('created_at', 'desc')->paginate(intval($perPage));
+        return response()->json($operations);
     }
 
     /**
@@ -54,7 +58,8 @@ class OperationController extends Controller
     {
         $operation = Operation::findOrFail($operationId);
         $operation->delete();
-        return response('Deleted successfully', 204);
+        return response('Deleted successfully', 204)
+            ->header('Content-Type', 'text/plain');
     }
 
     /**
@@ -81,8 +86,7 @@ class OperationController extends Controller
     {
         $v = Validator::make($request->all(), Operation::$rules);
 
-        if ($v->fails())
-        {
+        if ($v->fails()) {
             return Response::json($v->errors(), 400);
         }
 

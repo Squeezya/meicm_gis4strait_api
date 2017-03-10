@@ -15,6 +15,7 @@ use Webpatser\Uuid\Uuid;
 /**
  * @Controller(prefix="v1")
  * @Resource("v1/operations.sweeps", only={"index","store"})
+ * @Middleware("cors")
  * @Middleware("jwt.auth")
  */
 class OperationSweepsController extends Controller

@@ -19,6 +19,7 @@ use Webpatser\Uuid\Uuid;
 /**
  * @Controller(prefix="v1")
  * @Resource("v1/users", only={"index","store"})
+ * @Middleware("cors")
  */
 class UsersController extends Controller
 {
